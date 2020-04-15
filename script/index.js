@@ -27,7 +27,7 @@ const makeMemo = (item, idx) => {
     .height};" onblur="onBlurTextArea(event, memo${idx})">
         ${item.content}
       </div>
-      <button class="btn_size" onclick="onReSizeMemo(event, memo${idx})"><span class="blind">메모장 크기 조절</span></button>
+      <button class="btn_size" onmousemove="onReSizeMemo(event, memo${idx})" onmouseout="onReSizeMemo2(event, memo${idx})"><span class="blind">메모장 크기 조절</span></button>
   </div>
 </div>`
 }
@@ -76,7 +76,6 @@ var updateStorage = (action, pParam) => {
       }
       break
   }
-  console.log('result!!!', data)
 
   if (typeof data === 'object' && data !== null) {
     // 문자열 형태로 저장합니다.
@@ -92,11 +91,11 @@ const makeMemoElement = (item, idx = null) => {
     idx = item.id.substr(4)
   }
 
+  // DOM에 차례대로 추가
   $(makeMemo(item, idx)).appendTo(parent)
 
-  // 이벤트 핸들러 추가
+  // 이벤트 핸들러 추가 (드래그 관련))
   let target = document.getElementById(`memo${idx}`)
-  target.addEventListener('dragstart', ondragStart)
   target.addEventListener('dragend', ondragEnd)
   target.addEventListener('dragover', ondragOver)
 }
@@ -117,8 +116,9 @@ window.onload = function () {
       laxtIDX += 1
     })
   } else if (/[.*]|{.*}/.test(lsData)) {
+    // 메모장에 데이터가 있을 경우 파싱
     data = JSON.parse(lsData)
-    // TODO:: laxtIDX ###
+    // 다음 키 최대 값 기준 세팅
     laxtIDX = Number(data[data.length - 1].id.substr(4)) + 1
 
     // 저장된 메모장 동적으로 생성

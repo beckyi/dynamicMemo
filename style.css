@@ -73,6 +73,7 @@ q:after {
   overflow-x: hidden;
   overflow-y: auto;
   padding: 10px;
+  resize: both;
 }
 .content .textarea {
   outline: none;
